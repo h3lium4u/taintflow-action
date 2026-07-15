@@ -1,0 +1,21 @@
+name: Test Action
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Action Repository
+        uses: actions/checkout@v4
+
+      - name: Verify TaintFlow CLI Container Help
+        uses: ./
+        with:
+          path: '.'
+          format: 'text'
+          severity: 'LOW'

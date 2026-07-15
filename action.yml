@@ -1,0 +1,34 @@
+name: 'TaintFlow SAST'
+description: 'Offline Context-Sensitive Static Application Security Testing (SAST) for Java and Python.'
+author: 'F1ZZ4N'
+branding:
+  icon: 'shield'
+  color: 'blue'
+inputs:
+  path:
+    description: 'Path to scan (relative to workspace root)'
+    required: false
+    default: '.'
+  format:
+    description: 'Output format (text, json, sarif)'
+    required: false
+    default: 'text'
+  severity:
+    description: 'Minimum severity level (LOW, MEDIUM, HIGH)'
+    required: false
+    default: 'LOW'
+  output:
+    description: 'Output report file path'
+    required: false
+    default: ''
+outputs:
+  result:
+    description: 'Console output of the scan results'
+runs:
+  using: 'composite'
+  steps:
+    - name: Run TaintFlow Scan
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/entrypoint.sh
+        ${{ github.action_path }}/entrypoint.sh "${{ inputs.path }}" "${{ inputs.format }}" "${{ inputs.severity }}" "${{ inputs.output }}"
