@@ -65,3 +65,47 @@ jobs:
 | Output | Description |
 | :--- | :--- |
 | **`result`** | The console output of the scanner. |
+
+---
+
+## 🔒 GitHub Code Scanning Integration
+
+TaintFlow SAST supports native integration with GitHub Code Scanning. By outputting analysis results in the SARIF v2.1.0 format, security warnings and interprocedural taint flow graphs can be reviewed directly in your repository's **Security** tab.
+
+### Setup Workflow Example
+
+```yaml
+name: TaintFlow Security Scan
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  taintflow:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run TaintFlow
+        uses: h3lium4u/taintflow-action@v1
+        with:
+          path: .
+          format: sarif
+          output: taintflow-results.sarif
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: taintflow-results.sarif
+```
+
+### Viewing Results
+
+Vulnerabilities will be displayed in the Security center:
+
+![GitHub Security Alerts Interface Placeholder](docs/images/security_tab_preview.png)
+
